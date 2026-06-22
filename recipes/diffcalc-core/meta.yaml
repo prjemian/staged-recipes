@@ -1,0 +1,55 @@
+{% set name = "diffcalc-core" %}
+{% set version = "0.4.0" %}
+{% set python_min = "3.8" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/diffcalc-core-{{ version }}.tar.gz
+  sha256: 39c7cc2699b756ba98cacab8a41a0a8c49d7b4cfffe45b5e3391a799ed91f3f9
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python {{ python_min }}
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python >={{ python_min }}
+    - numpy
+    - scipy
+    - typing_extensions
+
+test:
+  requires:
+    - python {{ python_min }}
+    - pip
+    - pytest
+  source_files:
+    - tests
+  imports:
+    - diffcalc
+    - diffcalc.hkl
+    - diffcalc.ub
+  commands:
+    - pip check
+    - pytest -v tests
+
+about:
+  home: https://github.com/DiamondLightSource/diffcalc-core
+  summary: Diffraction Condition Calculator used for X-ray or neutron diffraction experiments
+  license: Apache-2.0
+  license_file: LICENSE
+  doc_url: https://diffcalc-core.readthedocs.io/
+  dev_url: https://github.com/DiamondLightSource/diffcalc-core
+
+extra:
+  recipe-maintainers:
+    - prjemian
